@@ -7,7 +7,6 @@ function Today({ celsius }) {
   return (
     <div>
       <h2 className='day'>Today</h2>
-      <h3>{weather.location.name}</h3>
       <p>{current.condition.text}</p>
       <p>feels like</p>
       <p>{celsius ? current.feelslike_c + '°c' : current.feelslike_f + '°f'}</p>
