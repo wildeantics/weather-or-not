@@ -25,7 +25,7 @@ function Weather() {
       }
       getWeather()
     } catch (error) {
-      console.error('Problem fetching my IP', error)
+      console.error('Problem fetching IP', error)
     }
   }
   const getWeather = async () => {
