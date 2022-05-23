@@ -11,6 +11,8 @@ import DayAfter from './../components/DayAfter'
 
 function Weather() {
   const location = localStorage.getItem('location')
+  const time = localStorage.getItem('time')
+  const weather = JSON.parse(localStorage.getItem('weather'))
   const [celsius, setCelsius] = useState(true)
   const [loading, setLoading] = useState(true)
 
@@ -28,12 +30,17 @@ function Weather() {
   }
   const getWeather = async () => {
     try {
-      const response = await fetch(
-        `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${location}&days=3&aqi=no&alerts=no`
-      )
-      const json = await response.json()
-      localStorage.setItem('weather', JSON.stringify(json))
-      setLoading(false)
+      if (Date.now() - time > 1800000) {
+        const response = await fetch(
+          `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${location}&days=3&aqi=no&alerts=no`
+        )
+        const json = await response.json()
+        localStorage.setItem('weather', JSON.stringify(json))
+        localStorage.setItem('time', Date.now())
+        setLoading(false)
+      } else {
+        setLoading(false)
+      }
     } catch (error) {
       console.error('Problem fetching weather', error)
     }
@@ -48,6 +55,7 @@ function Weather() {
   }
   return (
     <>
+      <h3>{weather.location.name}</h3>
       <Today celsius={celsius} />
       <Tomorrow celsius={celsius} />
       <DayAfter celsius={celsius} />
