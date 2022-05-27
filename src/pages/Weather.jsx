@@ -8,6 +8,8 @@ import Loading from './../components/Loading'
 import Today from './../components/Today'
 import Tomorrow from './../components/Tomorrow'
 import DayAfter from './../components/DayAfter'
+import { Grid } from '@mui/material'
+import { Container } from '@mui/system'
 
 function Weather() {
   const location = localStorage.getItem('location')
@@ -48,6 +50,7 @@ function Weather() {
 
   useEffect(() => {
     getIP()
+    // eslint-disable-next-line
   }, [])
 
   if (loading) {
@@ -55,14 +58,52 @@ function Weather() {
   }
   return (
     <>
-      <h3>{weather.location.name}</h3>
-      <Today celsius={celsius} />
-      <Tomorrow celsius={celsius} />
-      <DayAfter celsius={celsius} />
-      <p onClick={() => setCelsius(!celsius)}>
-        {celsius ? 'Imperial' : 'Celsius'}
-      </p>
-      <Link to='/about'>About</Link>
+      <Grid
+        container
+        columns={1}
+        direction='column'
+        justifyContent='center'
+        alignItems='center'
+        sx={{ height: '100vh' }}
+      >
+        <Grid item>
+          <h3>{weather.location.name}</h3>
+        </Grid>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <Grid item>
+            <Today celsius={celsius} />
+          </Grid>
+          <Grid item>
+            <Tomorrow celsius={celsius} />
+          </Grid>
+          <Grid item>
+            <DayAfter celsius={celsius} />
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+          sx={{ position: 'absolute', bottom: '10px' }}
+        >
+          <Grid item>
+            <p onClick={() => setCelsius(!celsius)}>
+              {celsius ? 'Imperial' : 'Celsius'}
+            </p>
+          </Grid>
+          <Grid item>
+            <Link to='/about'>About</Link>
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   )
 }
