@@ -1,16 +1,20 @@
 import React from 'react'
-import { Typography, Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import WeatherConditions from './WeatherConditions'
 
-function DayAfter({ celsius }) {
-  const forecast = JSON.parse(localStorage.getItem('weather')).forecast
-    .forecastday[2].day
+function WeatherSection({ celsius, day }) {
+  const weather = JSON.parse(localStorage.getItem('weather'))
+  const current = weather.current
+  const forecast = weather.forecast.forecastday[day].day
+  const days = ['Today', 'Tomorrow', 'Day After']
+
   return (
     <Grid
       container
       direction='column'
       justifyContent='center'
       alignItems='center'
+      sx={{ position: 'relative' }}
     >
       <Grid item>
         <Typography
@@ -20,13 +24,14 @@ function DayAfter({ celsius }) {
             textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             fontWeight: '700',
             color: 'rgba(255, 255, 255, 0.4)',
+            mb: 8,
           }}
         >
-          Day After
+          {days[day]}
         </Typography>
       </Grid>
-      <Grid item>
-        <WeatherConditions day='2' />
+      <Grid item sx={{ position: 'absolute', top: 15 }}>
+        <WeatherConditions day={day} />
       </Grid>
       <Grid item>
         <Typography
@@ -37,7 +42,7 @@ function DayAfter({ celsius }) {
             mb: 5,
           }}
         >
-          {forecast.condition.text}
+          {day === '0' ? current.condition.text : forecast.condition.text}
         </Typography>
       </Grid>
       <Grid item>
@@ -47,7 +52,7 @@ function DayAfter({ celsius }) {
             textTransform: 'lowercase',
           }}
         >
-          average
+          {day === '0' ? 'feels like' : 'average'}
         </Typography>
       </Grid>
       <Grid item>
@@ -59,7 +64,13 @@ function DayAfter({ celsius }) {
             fontWeight: '700',
           }}
         >
-          {celsius ? forecast.avgtemp_c + '°c' : forecast.avgtemp_f + '°f'}
+          {day === '0'
+            ? celsius
+              ? `${current.feelslike_c}°c`
+              : `${current.feelslike_f}°f`
+            : celsius
+            ? `${forecast.avgtemp_c}°c`
+            : `${forecast.avgtemp_f}°f`}
         </Typography>
       </Grid>
       <Grid
@@ -93,6 +104,7 @@ function DayAfter({ celsius }) {
                 sx={{
                   textTransform: 'uppercase',
                   mt: '0',
+                  fontWeight: 600,
                 }}
               >
                 {celsius ? forecast.mintemp_c : forecast.mintemp_f}
@@ -124,6 +136,7 @@ function DayAfter({ celsius }) {
                 sx={{
                   textTransform: 'uppercase',
                   mt: '0',
+                  fontWeight: 600,
                 }}
               >
                 {celsius ? forecast.maxtemp_c : forecast.maxtemp_f}
@@ -138,13 +151,14 @@ function DayAfter({ celsius }) {
           gutterBottom
           sx={{
             textTransform: 'uppercase',
+            fontWeight: 600,
           }}
         >
-          It will {forecast.daily_will_it_rain === 0 && 'not'} rain tomorrow
+          It will {forecast.daily_will_it_rain === 0 && 'not'} rain today
         </Typography>
       </Grid>
     </Grid>
   )
 }
 
-export default DayAfter
+export default WeatherSection
