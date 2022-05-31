@@ -1,10 +1,15 @@
+import { Typography } from '@mui/material'
 function Loading() {
   return (
     <>
-      <h1>
+      <Typography
+        variant='h1'
+        gutterBottom
+        style={{ textTransform: 'uppercase' }}
+      >
         Fetching your
         <span>Weather</span>
-      </h1>
+      </Typography>
       <svg
         xmlns='http://www.w3.org/2000/svg'
         style={{
