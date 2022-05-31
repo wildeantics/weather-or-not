@@ -122,3 +122,13 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+:root {
+  color: white;
+  font-family: 'Titillium Web', 'Helvetica', sans-serif;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}

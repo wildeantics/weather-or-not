@@ -3,29 +3,38 @@ import About from './pages/About'
 import Weather from './pages/Weather'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 function App() {
-  return (
-    <div className='container'>
-      <Router>
-        <Routes>
-          <Route path='/' element={<Weather />} />
-          <Route path='/about' element={<About />} />
-        </Routes>
-      </Router>
+  const THEME = createTheme({
+    typography: {
+      fontFamily: `"Titillium Web", "Helvetica", sans-serif`,
+    },
+  })
 
-      <ToastContainer
-        position='top-center'
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </div>
+  return (
+    <ThemeProvider theme={THEME}>
+      <div className='container'>
+        <Router>
+          <Routes>
+            <Route path='/' element={<Weather />} />
+            <Route path='/about' element={<About />} />
+          </Routes>
+        </Router>
+
+        <ToastContainer
+          position='top-center'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
+    </ThemeProvider>
   )
 }
 
