@@ -9,7 +9,8 @@ import Today from './../components/Today'
 import Tomorrow from './../components/Tomorrow'
 import DayAfter from './../components/DayAfter'
 import { Grid } from '@mui/material'
-import { Container } from '@mui/system'
+import { toast } from 'react-toastify'
+import { Typography } from '@mui/material'
 
 function Weather() {
   const location = localStorage.getItem('location')
@@ -27,7 +28,15 @@ function Weather() {
       }
       getWeather()
     } catch (error) {
-      console.error('Problem fetching IP', error)
+      toast.error('Problem fetching IP' + error, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
   }
   const getWeather = async () => {
@@ -44,7 +53,15 @@ function Weather() {
         setLoading(false)
       }
     } catch (error) {
-      console.error('Problem fetching weather', error)
+      toast.error('Problem fetching weather' + error, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
   }
 
@@ -57,21 +74,32 @@ function Weather() {
     return <Loading />
   }
   return (
-    <>
-      <Grid
-        container
-        columns={1}
-        direction='column'
-        justifyContent='center'
-        alignItems='center'
-        sx={{ height: '100vh' }}
-      >
-        <Grid item>
-          <h3>{weather.location.name}</h3>
-        </Grid>
+    <Grid
+      container
+      columns={1}
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+      sx={{ height: '100vh' }}
+    >
+      <Grid item>
+        <Typography
+          variant='h1'
+          gutterBottom
+          sx={{
+            textTransform: 'uppercase',
+            fontWeight: '700',
+            mb: 0,
+          }}
+        >
+          {weather.location.name}
+        </Typography>
+      </Grid>
+      <Grid item>
         <Grid
           container
-          spacing={{ xs: 2, md: 3 }}
+          columns={3}
+          columnGap={2}
           direction='row'
           justifyContent='center'
           alignItems='center'
@@ -86,25 +114,25 @@ function Weather() {
             <DayAfter celsius={celsius} />
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          direction='row'
-          justifyContent='center'
-          alignItems='center'
-          sx={{ position: 'absolute', bottom: '10px' }}
-        >
-          <Grid item>
-            <p onClick={() => setCelsius(!celsius)}>
-              {celsius ? 'Imperial' : 'Celsius'}
-            </p>
-          </Grid>
-          <Grid item>
-            <Link to='/about'>About</Link>
-          </Grid>
+      </Grid>
+      <Grid
+        container
+        spacing={{ xs: 30, md: 3 }}
+        direction={{ xs: 'row', md: 'column' }}
+        justifyContent='center'
+        alignItems='center'
+        sx={{ position: 'absolute', bottom: '10px' }}
+      >
+        <Grid item sx={{ cursor: 'pointer', userSelect: 'none' }}>
+          <p onClick={() => setCelsius(!celsius)}>
+            {celsius ? 'Imperial' : 'Celsius'}
+          </p>
+        </Grid>
+        <Grid item>
+          <Link to='/about'>About</Link>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   )
 }
 
