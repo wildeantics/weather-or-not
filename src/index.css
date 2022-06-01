@@ -132,3 +132,11 @@ a {
   color: white;
   text-decoration: none;
 }
+img {
+  height: 256px;
+  width: 256px;
+}
+.SwiperSlide {
+  position: relative;
+  width: 100%;
+}
