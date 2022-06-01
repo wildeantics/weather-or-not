@@ -5,12 +5,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Loading from './../components/Loading'
-import Today from './../components/Today'
-import Tomorrow from './../components/Tomorrow'
-import DayAfter from './../components/DayAfter'
 import { Grid } from '@mui/material'
 import { toast } from 'react-toastify'
 import { Typography } from '@mui/material'
+import WeatherSection from '../components/WeatherSection'
+import { weatherColors } from '../context/WeatherActions'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 function Weather() {
   const location = localStorage.getItem('location')
@@ -18,7 +19,11 @@ function Weather() {
   const weather = JSON.parse(localStorage.getItem('weather'))
   const [celsius, setCelsius] = useState(true)
   const [loading, setLoading] = useState(true)
+  const [isDesktop, setDesktop] = useState(window.innerWidth > 650)
 
+  const updateMedia = () => {
+    setDesktop(window.innerWidth > 650)
+  }
   const getIP = async () => {
     try {
       if (!location) {
@@ -65,8 +70,16 @@ function Weather() {
     }
   }
 
+  const color = {
+    color1: weatherColors(weather.current.condition.text),
+    color2: weatherColors(weather.forecast.forecastday[1].day.condition.text),
+    color3: weatherColors(weather.forecast.forecastday[2].day.condition.text),
+  }
+
   useEffect(() => {
     getIP()
+    window.addEventListener('resize', updateMedia)
+    return () => window.removeEventListener('resize', updateMedia)
     // eslint-disable-next-line
   }, [])
 
@@ -80,9 +93,19 @@ function Weather() {
       direction='column'
       justifyContent='center'
       alignItems='center'
-      sx={{ height: '100vh' }}
+      sx={{
+        height: '100vh',
+        background: `linear-gradient(90deg, ${color.color1}, ${color.color1}, ${color.color2},${color.color2}, ${color.color3}, ${color.color3})`,
+      }}
     >
-      <Grid item>
+      <Grid
+        item
+        sx={{
+          position: 'absolute',
+          top: '16vh',
+          textTransform: 'uppercase',
+        }}
+      >
         <Typography
           variant='h1'
           gutterBottom
@@ -98,21 +121,103 @@ function Weather() {
       <Grid item>
         <Grid
           container
-          columns={3}
-          columnGap={2}
           direction='row'
           justifyContent='center'
           alignItems='center'
+          sx={{
+            width: '100vw',
+          }}
         >
-          <Grid item>
-            <Today celsius={celsius} />
+          <Swiper className='mySwiper'>
+            <SwiperSlide>
+              <WeatherSection day='0' celsius={celsius} />
+              <Typography
+                variant='h4'
+                gutterBottom
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: '700',
+                  position: 'absolute',
+                  textAlign: 'center',
+                  top: '30%',
+                  right: 0,
+                  mb: 0,
+                  writingMode: 'vertical-lr',
+                  transform: 'rotate(180deg)',
+                  color: 'rgba(256, 256, 256, 0.7)',
+                }}
+              >
+                Tomorrow
+              </Typography>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Typography
+                variant='h4'
+                gutterBottom
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: '700',
+                  position: 'absolute',
+                  textAlign: 'center',
+                  top: '30%',
+                  left: 0,
+                  mb: 0,
+                  writingMode: 'vertical-lr',
+                  color: 'rgba(256, 256, 256, 0.7)',
+                }}
+              >
+                Today
+              </Typography>
+              <WeatherSection day='1' celsius={celsius} />
+              <Typography
+                variant='h4'
+                gutterBottom
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: '700',
+                  position: 'absolute',
+                  textAlign: 'center',
+                  top: '30%',
+                  right: 0,
+                  mb: 0,
+                  writingMode: 'vertical-lr',
+                  transform: 'rotate(180deg)',
+                  color: 'rgba(256, 256, 256, 0.7)',
+                }}
+              >
+                Day After
+              </Typography>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Typography
+                variant='h4'
+                gutterBottom
+                sx={{
+                  textTransform: 'uppercase',
+                  fontWeight: '700',
+                  position: 'absolute',
+                  textAlign: 'center',
+                  top: '30%',
+                  left: 0,
+                  mb: 0,
+                  writingMode: 'vertical-lr',
+                  color: 'rgba(256, 256, 256, 0.7)',
+                }}
+              >
+                Tomorrow
+              </Typography>
+              <WeatherSection day='2' celsius={celsius} />
+            </SwiperSlide>
+          </Swiper>
+          {/* <Grid item xs={12} md={4} xl={3}>
+            <WeatherSection day='0' celsius={celsius} />
           </Grid>
-          <Grid item>
-            <Tomorrow celsius={celsius} />
+          <Grid item xs={12} md={4} xl={3}>
+            <WeatherSection day='1' celsius={celsius} />
           </Grid>
-          <Grid item>
-            <DayAfter celsius={celsius} />
-          </Grid>
+          <Grid item xs={12} md={4} xl={3}>
+            <WeatherSection day='2' celsius={celsius} />
+          </Grid> */}
         </Grid>
       </Grid>
       <Grid
@@ -121,11 +226,15 @@ function Weather() {
         direction={{ xs: 'row', md: 'column' }}
         justifyContent='center'
         alignItems='center'
-        sx={{ position: 'absolute', bottom: '10px' }}
+        sx={{
+          position: 'absolute',
+          bottom: '10px',
+          textTransform: 'lowercase',
+        }}
       >
         <Grid item sx={{ cursor: 'pointer', userSelect: 'none' }}>
           <p onClick={() => setCelsius(!celsius)}>
-            {celsius ? 'Imperial' : 'Celsius'}
+            To {celsius ? 'Imperial' : 'Celsius'}
           </p>
         </Grid>
         <Grid item>

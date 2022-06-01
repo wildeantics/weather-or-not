@@ -1,12 +1,22 @@
 import React from 'react'
 import { Grid, Typography } from '@mui/material'
-import WeatherConditions from './WeatherConditions'
+import { useEffect, useState } from 'react'
+import { weatherImages } from './../context/WeatherActions'
 
 function WeatherSection({ celsius, day }) {
   const weather = JSON.parse(localStorage.getItem('weather'))
   const current = weather.current
   const forecast = weather.forecast.forecastday[day].day
   const days = ['Today', 'Tomorrow', 'Day After']
+  const [condition, setCondition] = useState('')
+
+  useEffect(() => {
+    if (day === '0') {
+      setCondition(weather.current.condition.text)
+    } else {
+      setCondition(weather.forecast.forecastday[day].day.condition.text)
+    }
+  }, [day, weather])
 
   return (
     <Grid
@@ -20,18 +30,18 @@ function WeatherSection({ celsius, day }) {
         <Typography
           variant='h2'
           sx={{
+            color: 'rgba(183, 226, 243, 0.7)',
             textTransform: 'uppercase',
             textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             fontWeight: '700',
-            color: 'rgba(255, 255, 255, 0.4)',
-            mb: 8,
+            mb: 14,
           }}
         >
           {days[day]}
         </Typography>
       </Grid>
-      <Grid item sx={{ position: 'absolute', top: 15 }}>
-        <WeatherConditions day={day} />
+      <Grid item sx={{ position: 'absolute', top: -10 }}>
+        {weatherImages(condition)}
       </Grid>
       <Grid item>
         <Typography
@@ -42,7 +52,7 @@ function WeatherSection({ celsius, day }) {
             mb: 5,
           }}
         >
-          {day === '0' ? current.condition.text : forecast.condition.text}
+          {day === '0' ? condition : condition}
         </Typography>
       </Grid>
       <Grid item>
