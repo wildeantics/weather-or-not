@@ -98,21 +98,12 @@ function Weather() {
         background: `linear-gradient(90deg, ${color.color1}, ${color.color1}, ${color.color2},${color.color2}, ${color.color3}, ${color.color3})`,
       }}
     >
-      <Grid
-        item
-        sx={{
-          position: 'absolute',
-          top: '16vh',
-          textTransform: 'uppercase',
-        }}
-      >
+      <Grid item>
         <Typography
           variant='h1'
-          gutterBottom
           sx={{
             textTransform: 'uppercase',
             fontWeight: '700',
-            mb: 0,
           }}
         >
           {weather.location.name}
