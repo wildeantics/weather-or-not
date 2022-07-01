@@ -3,8 +3,7 @@ import { Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { weatherImages } from './../context/WeatherActions'
 
-function WeatherSection({ celsius, day }) {
-  const weather = JSON.parse(localStorage.getItem('weather'))
+function WeatherSection({ celsius, day, weather }) {
   const current = weather.current
   const forecast = weather.forecast.forecastday[day].day
   const days = ['Today', 'Tomorrow', 'Day After']

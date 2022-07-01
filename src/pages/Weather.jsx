@@ -8,52 +8,25 @@ import { Grid } from '@mui/material'
 import { toast } from 'react-toastify'
 import { Typography } from '@mui/material'
 import WeatherSection from '../components/WeatherSection'
-import { weatherColors } from '../context/WeatherActions'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
 import GitHubIcon from '@mui/icons-material/GitHub'
 
 function Weather() {
-  const location = localStorage.getItem('location')
-  const time = localStorage.getItem('time')
-  const weather = JSON.parse(localStorage.getItem('weather'))
+  const [weather, setWeather] = useState({})
   const [celsius, setCelsius] = useState(true)
   const [loading, setLoading] = useState(true)
 
-  const getIP = async () => {
-    try {
-      if (!location) {
-        const response = await fetch('https://ipapi.co/json/')
-        const json = await response.json()
-        localStorage.setItem('location', json.ip)
-      }
-      getWeather()
-    } catch (error) {
-      toast.error('Problem fetching IP' + error, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-    }
-  }
   const getWeather = async () => {
     try {
-      if (Date.now() - time > 1800000) {
-        const response = await fetch(
-          `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${location}&days=3&aqi=no&alerts=no`
-        )
-        const json = await response.json()
-        localStorage.setItem('weather', JSON.stringify(json))
-        localStorage.setItem('time', Date.now())
-        setLoading(false)
-      } else {
-        setLoading(false)
-      }
+      const response = await fetch('https://ipapi.co/json/')
+      const json = await response.json()
+      const res = await fetch(
+        `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${json.ip}&days=3&aqi=no&alerts=no`
+      )
+      setWeather(await res.json())
+      setLoading(false)
     } catch (error) {
       toast.error('Problem fetching weather' + error, {
         position: 'top-center',
@@ -67,14 +40,8 @@ function Weather() {
     }
   }
 
-  const color = {
-    color1: weatherColors(weather.current.condition.text),
-    color2: weatherColors(weather.forecast.forecastday[1].day.condition.text),
-    color3: weatherColors(weather.forecast.forecastday[2].day.condition.text),
-  }
-
   useEffect(() => {
-    getIP()
+    getWeather()
     // eslint-disable-next-line
   }, [])
 
@@ -90,7 +57,7 @@ function Weather() {
       alignItems='center'
       sx={{
         height: '100vh',
-        background: `linear-gradient(90deg, ${color.color1}, ${color.color1}, ${color.color2},${color.color2}, ${color.color3}, ${color.color3})`,
+        background: '#002947',
       }}
     >
       <Grid item>
@@ -116,7 +83,7 @@ function Weather() {
         >
           <Swiper className='mySwiper'>
             <SwiperSlide>
-              <WeatherSection day='0' celsius={celsius} />
+              <WeatherSection day='0' celsius={celsius} weather={weather} />
               <Typography
                 variant='h4'
                 gutterBottom
@@ -138,7 +105,7 @@ function Weather() {
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
-              <WeatherSection day='1' celsius={celsius} />
+              <WeatherSection day='1' celsius={celsius} weather={weather} />
               <Typography
                 variant='h4'
                 gutterBottom
@@ -178,7 +145,7 @@ function Weather() {
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
-              <WeatherSection day='2' celsius={celsius} />
+              <WeatherSection day='2' celsius={celsius} weather={weather} />
               <Typography
                 variant='h4'
                 gutterBottom
