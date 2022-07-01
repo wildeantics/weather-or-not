@@ -3,7 +3,6 @@
 /* https://www.weatherapi.com/api-explorer.aspx#forecast */
 
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Loading from './../components/Loading'
 import { Grid } from '@mui/material'
 import { toast } from 'react-toastify'
@@ -13,17 +12,15 @@ import { weatherColors } from '../context/WeatherActions'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
+import GitHubIcon from '@mui/icons-material/GitHub'
+
 function Weather() {
   const location = localStorage.getItem('location')
   const time = localStorage.getItem('time')
   const weather = JSON.parse(localStorage.getItem('weather'))
   const [celsius, setCelsius] = useState(true)
   const [loading, setLoading] = useState(true)
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 650)
 
-  const updateMedia = () => {
-    setDesktop(window.innerWidth > 650)
-  }
   const getIP = async () => {
     try {
       if (!location) {
@@ -78,8 +75,6 @@ function Weather() {
 
   useEffect(() => {
     getIP()
-    window.addEventListener('resize', updateMedia)
-    return () => window.removeEventListener('resize', updateMedia)
     // eslint-disable-next-line
   }, [])
 
@@ -136,12 +131,14 @@ function Weather() {
                   writingMode: 'vertical-lr',
                   transform: 'rotate(180deg)',
                   color: 'rgba(256, 256, 256, 0.7)',
+                  cursor: 'grab',
                 }}
               >
                 Tomorrow
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
+              <WeatherSection day='1' celsius={celsius} />
               <Typography
                 variant='h4'
                 gutterBottom
@@ -155,11 +152,11 @@ function Weather() {
                   mb: 0,
                   writingMode: 'vertical-lr',
                   color: 'rgba(256, 256, 256, 0.7)',
+                  cursor: 'grab',
                 }}
               >
                 Today
               </Typography>
-              <WeatherSection day='1' celsius={celsius} />
               <Typography
                 variant='h4'
                 gutterBottom
@@ -174,12 +171,14 @@ function Weather() {
                   writingMode: 'vertical-lr',
                   transform: 'rotate(180deg)',
                   color: 'rgba(256, 256, 256, 0.7)',
+                  cursor: 'grab',
                 }}
               >
                 Day After
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
+              <WeatherSection day='2' celsius={celsius} />
               <Typography
                 variant='h4'
                 gutterBottom
@@ -193,22 +192,13 @@ function Weather() {
                   mb: 0,
                   writingMode: 'vertical-lr',
                   color: 'rgba(256, 256, 256, 0.7)',
+                  cursor: 'grab',
                 }}
               >
                 Tomorrow
               </Typography>
-              <WeatherSection day='2' celsius={celsius} />
             </SwiperSlide>
           </Swiper>
-          {/* <Grid item xs={12} md={4} xl={3}>
-            <WeatherSection day='0' celsius={celsius} />
-          </Grid>
-          <Grid item xs={12} md={4} xl={3}>
-            <WeatherSection day='1' celsius={celsius} />
-          </Grid>
-          <Grid item xs={12} md={4} xl={3}>
-            <WeatherSection day='2' celsius={celsius} />
-          </Grid> */}
         </Grid>
       </Grid>
       <Grid
@@ -229,7 +219,9 @@ function Weather() {
           </p>
         </Grid>
         <Grid item>
-          <Link to='/about'>About</Link>
+          <a href='https://github.com/wildeantics'>
+            <GitHubIcon />
+          </a>
         </Grid>
       </Grid>
     </Grid>
