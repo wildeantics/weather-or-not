@@ -23,7 +23,7 @@ function Weather() {
       const response = await fetch('https://ipapi.co/json/')
       const json = await response.json()
       const res = await fetch(
-        `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${json.ip}&days=3&aqi=no&alerts=no`
+        `https://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API}&q=${json.ip}&days=3&aqi=no&alerts=no`
       )
       setWeather(await res.json())
       setLoading(false)
